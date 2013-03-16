@@ -172,7 +172,7 @@ function updateMobileScreen(animate){
 
 
   var ct = setClassesToday(eventDate.day-1);
-  if (ct[5] == "After") {
+  if (ct[5] == "After") { // TODO eliminate AFTER SCHOOL block
     ct.pop();
   }
   var j = 1;
@@ -211,12 +211,12 @@ function updateMobileScreen(animate){
     var tds = $("#singleDay tbody td"), scrolls = tds.filter(".scroll"), shows = tds.filter(".show");
     tds.css("position", "fixed");
     tds.css("marginTop", "-" + $(window).scrollTop() + "px");
-    scrolls.css("left", $("#singleDay").width() + 30 + "px");
+	scrolls.css("left", (animate == "forward") ? $("#singleDay").width() + 30 + "px" : -500 + "px");
     scrolls.css("border-bottom", "none");
     scrolls.show();
     scrolls.css("width", $("#singleDay").width() + 20 + "px");
     shows.animate({
-      left: -500
+	  left: (animate == "forward") ? -500 : 500
     }, {
       complete: function(){
         $("#date").html(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"][eventDate.day]);
@@ -873,11 +873,13 @@ function hex(x) {
     if (direction > 0) {
       eventDate.day += 1;
       selectedDate = new Date(selectedDate.getTime() + 86400000);
+	  var animate = "forward";
     }else{
       eventDate.day += 6;
       selectedDate = new Date(selectedDate.getTime() - 86400000);
+	  var animate = "backward";
     }
 
     eventDate.day = eventDate.day % 7;
-    updateMobileScreen(true);
+    updateMobileScreen(animate);
   }
